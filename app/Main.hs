@@ -7,7 +7,6 @@ import Debug.Trace
 
 type Hdl = String
 type Text = String
-type ListCorpus = [(Hdl, Text)]
 type MapCorpus = Map.Map Hdl Text
 
 main :: IO ()
@@ -25,16 +24,9 @@ main = do
 tuplify2 :: [a] -> (a,a)
 tuplify2 [x,y] = (x,y)
 
-makeListCorpus :: [Char] -> ListCorpus
-makeListCorpus = map (tuplify2 . splitOn "\t") . lines
-
 makeMapCorpus :: [Char] -> MapCorpus
-makeMapCorpus = Map.fromList . makeListCorpus
+makeMapCorpus = Map.fromList . map (tuplify2 . splitOn "\t") . lines
                  
-makePairsL :: ListCorpus -> [(Hdl, Hdl)]
-makePairsL []  = []
-makePairsL (h:hs) = [ (i, j) | i <- [fst h], j <- map fst hs ] ++ makePairsL hs
-
 makePairsM :: MapCorpus -> Float -> [(Hdl, Hdl)]
 makePairsM c lc =
     case (Map.keys c) of []     -> []
